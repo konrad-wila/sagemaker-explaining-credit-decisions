@@ -35,6 +35,7 @@ from sagemaker.sklearn import SKLearnModel
 import sys
 
 sys.path.append('../package')
+#sys.path.append('../package/package')
 from package import config, utils, visuals
 from package.data import schemas
 from package.sagemaker import predictors
@@ -105,7 +106,7 @@ model = SKLearnModel(
 # %%
 model.deploy(
     endpoint_name=explainer_name,
-    instance_type='ml.c5.xlarge',
+    instance_type='ml.t3.medium', # changed from ml.m5.large for cost reduction
     initial_instance_count=1,
     tags=[{'Key': config.TAG_KEY, 'Value': config.SOLUTION_PREFIX}]
 )

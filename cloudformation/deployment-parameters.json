@@ -1,0 +1,18 @@
+[
+  {
+    "ParameterKey": "SolutionPrefix",
+    "ParameterValue": "sm-soln-explaining-demo"
+  },
+  {
+    "ParameterKey": "CreateSageMakerNotebookInstance",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "SageMakerNotebookInstanceType",
+    "ParameterValue": "ml.t3.medium"
+  },
+  {
+    "ParameterKey": "StackVersion",
+    "ParameterValue": "release"
+  }
+]
