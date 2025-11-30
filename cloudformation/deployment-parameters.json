@@ -1,0 +1,26 @@
+[
+  {
+    "ParameterKey": "SolutionPrefix",
+    "ParameterValue": "sm-soln-explaining-demo"
+  },
+  {
+    "ParameterKey": "CreateSageMakerNotebookInstance",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "SageMakerNotebookInstanceType",
+    "ParameterValue": "ml.t3.medium"
+  },
+  {
+    "ParameterKey": "StackVersion",
+    "ParameterValue": "release"
+  },
+  {
+    "ParameterKey": "SolutionName",
+    "ParameterValue": "Explaining-credit-decisions"
+  },
+  {
+    "ParameterKey": "SolutionRole",
+    "ParameterValue": "arn:aws:iam::695165643296:role/explaining-ai-credit"
+  }
+]

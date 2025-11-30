@@ -14,6 +14,17 @@ Parameters:
       names cannot contain capital letters).
     AllowedPattern: '^sm-soln-explaining-[a-z0-9\-]{1,20}$'
     ConstraintDescription: Only allowed to use lowercase letters, hyphens and/or numbers. Should start with 'sm-soln-explaining-' for permission management. Should be 39 characters or less.
+  SolutionName:
+    Type: String
+    Description: |
+      Name of the folder within the SageMaker Solutions distribution bucket that contains the
+      nested CloudFormation templates and artifacts.
+    Default: Explaining-credit-decisions
+  SolutionRole:
+    Type: String
+    Description: |
+      ARN of the IAM role that AWS Glue resources should assume. This role must already exist
+      with the permissions described in the deployment guide.
   CreateSageMakerNotebookInstance:
     Description: Create a SageMaker Notebook Instance as part of the stack?
     Type: String
@@ -70,23 +81,27 @@ Resources:
     Type: "AWS::CloudFormation::Stack"
     Properties:
       TemplateURL: !Sub
-        - "https://${SolutionsS3BucketNamePrefix}-${AWS::Region}.s3.amazonaws.com/Explaining-credit-decisions/cloudformation/glue/glue.yaml"
+        - "https://${SolutionsS3BucketNamePrefix}-${AWS::Region}.s3.amazonaws.com/${SolutionName}/cloudformation/glue/glue.yaml"
         - SolutionsS3BucketNamePrefix:
             Fn::FindInMap: [SolutionsS3BucketNamePrefix, Ref: StackVersion, Prefix]
+          SolutionName: !Ref SolutionName
       Parameters:
         SolutionPrefix: !Ref SolutionPrefix
         S3BucketName: !Ref S3Bucket
         SolutionsS3BucketName: !Sub
-        - ${SolutionsS3BucketNamePrefix}-${AWS::Region}
-        - SolutionsS3BucketNamePrefix:
-            Fn::FindInMap: [SolutionsS3BucketNamePrefix, Ref: StackVersion, Prefix]
+          - ${SolutionsS3BucketNamePrefix}-${AWS::Region}
+          - SolutionsS3BucketNamePrefix:
+              Fn::FindInMap: [SolutionsS3BucketNamePrefix, Ref: StackVersion, Prefix]
+        SolutionName: !Ref SolutionName
+        SolutionRole: !Ref SolutionRole
   SageMakerStack:
     Type: "AWS::CloudFormation::Stack"
     Properties:
       TemplateURL: !Sub
-        - "https://${SolutionsS3BucketNamePrefix}-${AWS::Region}.s3.amazonaws.com/Explaining-credit-decisions/cloudformation/sagemaker/sagemaker.yaml"
+        - "https://${SolutionsS3BucketNamePrefix}-${AWS::Region}.s3.amazonaws.com/${SolutionName}/cloudformation/sagemaker/sagemaker.yaml"
         - SolutionsS3BucketNamePrefix:
             Fn::FindInMap: [SolutionsS3BucketNamePrefix, Ref: StackVersion, Prefix]
+          SolutionName: !Ref SolutionName
       Parameters:
         SolutionPrefix: !Ref SolutionPrefix
         StackVersion: !Ref StackVersion
@@ -99,13 +114,16 @@ Resources:
               Fn::FindInMap: [SolutionsS3BucketNamePrefix, Ref: StackVersion, Prefix]
         CreateSageMakerNotebookInstance: !Ref CreateSageMakerNotebookInstance
         SageMakerNotebookInstanceType: !Ref SageMakerNotebookInstanceType
+        SolutionName: !Ref SolutionName
+        SolutionRole: !Ref SolutionRole
   SolutionAssistantStack:
     Type: "AWS::CloudFormation::Stack"
     Properties:
       TemplateURL: !Sub
-        - "https://${SolutionsS3BucketNamePrefix}-${AWS::Region}.s3.amazonaws.com/Explaining-credit-decisions/cloudformation/solution-assistant/solution-assistant.yaml"
+        - "https://${SolutionsS3BucketNamePrefix}-${AWS::Region}.s3.amazonaws.com/${SolutionName}/cloudformation/solution-assistant/solution-assistant.yaml"
         - SolutionsS3BucketNamePrefix:
             Fn::FindInMap: [SolutionsS3BucketNamePrefix, Ref: StackVersion, Prefix]
+          SolutionName: !Ref SolutionName
       Parameters:
         SolutionPrefix: !Ref SolutionPrefix
         S3BucketName: !Ref S3Bucket
@@ -114,6 +132,7 @@ Resources:
           - SolutionsS3BucketNamePrefix:
               Fn::FindInMap: [SolutionsS3BucketNamePrefix, Ref: StackVersion, Prefix]
         ECRRepository: !GetAtt SageMakerStack.Outputs.ECRRepository
+        SolutionName: !Ref SolutionName
 Outputs:
   AwsAccountId:
     Value: !Ref AWS::AccountId
