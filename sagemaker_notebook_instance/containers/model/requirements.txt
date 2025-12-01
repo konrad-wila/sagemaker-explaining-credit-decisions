@@ -1,0 +1,7 @@
+# Model requirements - compatible with Python 3.10+
+scikit-learn>=1.0.0
+lightgbm>=3.0.0
+joblib>=1.0.0
+shap>=0.40.0
+# package source will be provided at run time
+-r ../../package/requirements.txt

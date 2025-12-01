@@ -173,7 +173,7 @@ def env_setup_notebook_instance() -> None:
     logging.info('Upgrading jupyter-server-proxy in JupyterSystemEnv.')
     bash("""
     pip uninstall -y nbserverproxy || true
-    pip install --upgrade jupyter-server-proxy==1.3.2
+    pip install --upgrade jupyter-server-proxy>=3.0.0
     """)
     logging.warning('Restarting jupyter-server.')
     logging.warning('Jupyter notebook/terminals will freeze, so please refresh page to resume interactivity.')
@@ -193,7 +193,7 @@ def env_setup_studio() -> None:
     {py_exec} -m pip  install --upgrade terminado --ignore-installed
     """)
     logging.info('Installing conda packages.')
-    bash("conda install -c conda-forge shap==0.35.0 -y")
+    bash("conda install -c conda-forge shap>=0.40 -y")
     logging.info('Installing pip packages.')
     bash(f"""
     export PIP_DISABLE_PIP_VERSION_CHECK=1

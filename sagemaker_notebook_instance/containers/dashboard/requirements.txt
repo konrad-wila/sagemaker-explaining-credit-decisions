@@ -1,0 +1,7 @@
+# Dashboard requirements - compatible with Python 3.10+
+boto3>=1.20.0
+matplotlib>=3.5.0
+numpy>=1.21.0
+pandas>=1.3.0
+shap>=0.40.0
+streamlit>=1.0.0
