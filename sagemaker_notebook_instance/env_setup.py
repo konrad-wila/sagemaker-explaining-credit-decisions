@@ -148,11 +148,17 @@ def add_to_logbook(hostname: str, executable: str) -> None:
 def env_setup_notebook_instance() -> None:
     logging.info('Starting environment setup for Notebook Instance.')
     py_exec = get_executable()
-    logging.info('Uninstalling Python packages insatlled with distutils.')
-    bash("""
-    # fix to upgrade `docutils` that was installed with `distutils` (hence pip can't uninstall)
-    rm -rf /home/ec2-user/anaconda3/envs/python3/lib/python3.6/site-packages/docutils
-    rm -rf /home/ec2-user/anaconda3/envs/python3/lib/python3.6/site-packages/docutils-*
+    logging.info('Cleaning any distutils-installed docutils in current env (version-agnostic).')
+    bash(f"""
+    {py_exec} - <<'PY'
+import sysconfig, shutil
+from pathlib import Path
+
+purelib = Path(sysconfig.get_paths()["purelib"])
+for name in ["docutils", "docutils-*"]:
+    for path in purelib.glob(name):
+        shutil.rmtree(path, ignore_errors=True)
+PY
     """)
     logging.info('Upgrading pip packages.')
     bash(f"""
